@@ -1,4 +1,4 @@
-# guía rápida de iniciación 
+# Guía para Especiales
 
 # 1. instalar las dependencias
     abre una terminal en la carpeta del proyecto
