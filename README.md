@@ -15,6 +15,10 @@
     cambia el nombre del archivo "env.example" a ".env".
     dentro de .env edita las siguientes lineas: 
         DB_DATABASE=scholarium DB_USERNAME= "aqui pone tu usuario" DB_PASSWORD= "tu contraseña" si no la tienes, dejala en blanco
-# 4. Levanta la pagina con el siguiente código 
+
+# 4. Generar la clave 
+    php artisan key:generate
+    
+# 5. Levanta la pagina con el siguiente código 
 
     php artisan serve
