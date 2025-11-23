@@ -131,14 +131,12 @@ class AuthController extends Controller
         }
         elseif (Auth::user()->role === 'estudiante') {
             return view('dashboard.estudiante');
+        } elseif (Auth::user()->role === 'profesor') {
+            return view('dashboard.profesor');
         } else {
-            return redirect()->intended('dashboard');
+            // Dashboard genérico para otros roles
+            return view('dashboard.index');
         }
-
-        
-        
-        // Dashboard para otros roles
-        return view('dashboard.index');
     }
 
     // Mostrar formulario de registro de administrador (solo para admins)

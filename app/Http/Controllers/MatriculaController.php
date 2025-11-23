@@ -190,7 +190,11 @@ class MatriculaController extends Controller
         $curso = Curso::findOrFail($validated['curso_id']);
         
         
-        $estudiante = Estudiante::where('user_id', auth()->id())->firstOrFail();
+        $estudiante = Estudiante::where('user_id', auth()->id())->first();
+        
+        if (!$estudiante) {
+            return back()->with('error', 'No se encontró tu perfil de estudiante. Por favor contacta al administrador.');
+        }
         
     
 
