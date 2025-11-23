@@ -66,7 +66,7 @@ class MatriculaController extends Controller
 
         // Verificar que el estudiante NO esté matriculado en NINGÚN curso del mismo año académico
         $yaMatriculado = Matricula::where('estudiante_id', $validated['estudiante_id'])
-                                  ->where('estado', 'Matriculado')
+                                  ->where('estado', 'Aprobada')
                                   ->whereHas('curso', function($query) use ($curso) {
                                       $query->where('anio_academico', $curso->anio_academico);
                                   })
@@ -82,7 +82,7 @@ class MatriculaController extends Controller
             return back()->with('error', 'El curso no tiene cupos disponibles.');
         }
 
-        $validated['estado'] = 'Matriculado';
+        $validated['estado'] = 'Aprobada';
         $matricula = Matricula::create($validated);
 
         // Datos para el feedback
@@ -208,7 +208,7 @@ class MatriculaController extends Controller
 
         // Verificar que NO esté matriculado en ningún curso del mismo año académico
         $yaMatriculado = Matricula::where('estudiante_id', $estudiante->id)
-                                  ->whereIn('estado', ['Pendiente', 'Matriculado'])
+                                  ->whereIn('estado', ['Pendiente', 'Aprobada'])
                                   ->whereHas('curso', function($query) use ($curso) {
                                       $query->where('anio_academico', $curso->anio_academico);
                                   })
@@ -247,7 +247,7 @@ class MatriculaController extends Controller
         // Verificar que el estudiante NO esté matriculado en otro curso del mismo año
         $yaMatriculado = Matricula::where('estudiante_id', $matricula->estudiante_id)
                                   ->where('id', '!=', $id) // Excluir la solicitud actual
-                                  ->where('estado', 'Matriculado')
+                                  ->where('estado', 'Aprobada')
                                   ->whereHas('curso', function($query) use ($matricula) {
                                       $query->where('anio_academico', $matricula->curso->anio_academico);
                                   })
@@ -263,7 +263,7 @@ class MatriculaController extends Controller
             return back()->with('error', 'No se puede aprobar la matrícula. El curso "' . $matricula->curso->nombre . '" no tiene cupos disponibles.');
         }
         
-        $matricula->update(['estado' => 'Matriculado']);
+        $matricula->update(['estado' => 'Aprobada']);
         
         // Crear notificación para el estudiante
         session()->put('notificacion_estudiante_' . $matricula->estudiante->user_id, [

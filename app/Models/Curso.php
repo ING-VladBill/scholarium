@@ -39,14 +39,14 @@ class Curso extends Model
     // Accessor para cupos disponibles
     public function getCuposDisponiblesAttribute()
     {
-        $matriculados = $this->matriculas()->where('estado', 'Matriculado')->count();
+        $matriculados = $this->matriculas()->where('estado', 'Aprobada')->count();
         return $this->capacidad_maxima - $matriculados;
     }
 
     // Accessor para cantidad de estudiantes matriculados
     public function getEstudiantesMatriculadosAttribute()
     {
-        return $this->matriculas()->where('estado', 'Matriculado')->count();
+        return $this->matriculas()->where('estado', 'Aprobada')->count();
     }
 
     // Verificar si el curso está lleno
