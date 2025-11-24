@@ -47,5 +47,13 @@
     @else
         <p class="text-muted">No hay solicitudes pendientes.</p>
     @endif
+        <div>
+            <a href="{{ route('dashboard') }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver al Dashboard
+            </a>            
+            <a href="{{ route('matriculas.listar') }}" class="btn btn-info">
+                <i class="bi bi-list-check"></i> Ver Matrículas
+            </a>            
+        </div>
 </div>
 @endsection

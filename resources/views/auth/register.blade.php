@@ -112,6 +112,20 @@
                                    required
                                    placeholder="Repite tu contraseña">
                         </div>
+                        
+                    <div class="col-md-4 mb-3">
+                        <label for="genero" class="form-label" >Género <span class="text-danger">*</span></label>
+                        <select class="form-select @error('genero') is-invalid @enderror" 
+                                id="genero" name="genero" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Masculino" {{ old('genero') == 'Masculino' ? 'selected' : '' }}>Masculino</option>
+                            <option value="Femenino" {{ old('genero') == 'Femenino' ? 'selected' : '' }}>Femenino</option>
+                        </select>
+                        @error('genero')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
 
                         <button type="submit" class="btn btn-primary w-100 mb-3">
                             <i class="bi bi-person-plus-fill"></i> Registrarse como Estudiante

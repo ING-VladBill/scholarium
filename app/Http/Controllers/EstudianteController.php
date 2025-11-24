@@ -77,7 +77,7 @@ class EstudianteController extends Controller
             'direccion' => 'nullable|string',
             'telefono' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:100',
-            'genero' => 'required|in:Masculino,Femenino,Otro',
+            'genero' => 'required|in:Masculino,Femenino',
             'estado' => 'required|in:Activo,Inactivo',
             'fecha_ingreso' => 'required|date',
         ]);

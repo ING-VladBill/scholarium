@@ -95,7 +95,6 @@
                             <option value="">Seleccione...</option>
                             <option value="Masculino" {{ old('genero') == 'Masculino' ? 'selected' : '' }}>Masculino</option>
                             <option value="Femenino" {{ old('genero') == 'Femenino' ? 'selected' : '' }}>Femenino</option>
-                            <option value="Otro" {{ old('genero') == 'Otro' ? 'selected' : '' }}>Otro</option>
                         </select>
                         @error('genero')
                             <div class="invalid-feedback">{{ $message }}</div>

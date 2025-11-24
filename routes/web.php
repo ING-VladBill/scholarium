@@ -56,9 +56,9 @@ Route::middleware(['auth'])->group(function () {
     
     // Dashboard
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
-    /*Route::get('/dashboard/estudiante', function() {
+    Route::get('/dashboard/estudiante', function() {
         return view('dashboard.estudiante');
-    })->name('dashboard.estudiante')->middleware('auth');*/
+    })->name('dashboard.estudiante')->middleware('auth');
 
   
    /* Route::post('/estudiante/matriculas/solicitar', [MatriculaController::class, 'solicitar'])->name('matriculas.solicitar');*/

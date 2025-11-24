@@ -95,7 +95,7 @@
                 <div class="card h-100 hover-card">
                     <div class="card-body text-center">
                         <i class="bi bi-book-fill" style="font-size: 2.5rem; color: var(--vinotinto-oscuro);"></i>
-                        <h5 class="mt-3">Gestionar Cursos</h5>
+                        <h5 class="mt-3">Gestionar Secciones</h5>
                         <p class="text-muted small">Ver, crear, editar y eliminar cursos</p>
                     </div>
                 </div>

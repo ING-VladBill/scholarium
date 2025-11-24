@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container py-4">
-    <h2 class="mb-4"><i class="bi bi-plus-circle-fill"></i> Crear Nuevo Curso</h2>
+    <h2 class="mb-4"><i class="bi bi-plus-circle-fill"></i> Crear Nueva Sección </h2>
 
     <div class="card">
         <div class="card-body">
@@ -13,7 +13,7 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="nombre" class="form-label">Nombre del Curso <span class="text-danger">*</span></label>
+                        <label for="nombre" class="form-label">Nombre de la sección <span class="text-danger">*</span></label>
                         <input type="text" class="form-control @error('nombre') is-invalid @enderror" 
                                id="nombre" name="nombre" value="{{ old('nombre') }}" 
                                placeholder="1° Básico A" required>
@@ -112,7 +112,7 @@
                         <i class="bi bi-arrow-left"></i> Cancelar
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save"></i> Guardar Curso
+                        <i class="bi bi-save"></i> Guardar Sección
                     </button>
                 </div>
             </form>

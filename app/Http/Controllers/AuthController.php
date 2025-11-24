@@ -29,7 +29,19 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('dashboard')->with('success', '¡Bienvenido ' . Auth::user()->name . '!');
+
+            // Obtener estudiante si existe
+            $est = \App\Models\Estudiante::where('user_id', Auth::id())->first();
+
+            // Determinar saludo
+            $saludo = match($est->genero ?? 'Masculino') {
+                'Femenino' => 'Bienvenida',
+                'Masculino' => 'Bienvenido',
+                default => 'Bienvenid@',
+            };
+
+            return redirect()->intended('dashboard')
+                ->with('success', "¡$saludo " . Auth::user()->name . "!");
         }
 
         return back()->withErrors([
@@ -55,6 +67,7 @@ class AuthController extends Controller
             'fecha_nacimiento' => 'required|date|before:today|after:' . date('Y-m-d', strtotime('-18 years')),
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
+            'genero' => 'required|in:Masculino,Femenino',
         ]);
 
         // Validar edad (6-17 años)
@@ -87,7 +100,7 @@ class AuthController extends Controller
             'email' => $validated['email'],
             'telefono' => '',
             'direccion' => '',
-            'genero' => 'Otro',
+            'genero' => $validated['genero'],
             'estado' => 'Activo',
             'fecha_ingreso' => now()
         ]);

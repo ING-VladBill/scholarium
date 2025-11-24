@@ -5,9 +5,9 @@
 @section('content')
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="bi bi-book-fill"></i> Gestión de Cursos</h2>
+        <h2><i class="bi bi-book-fill"></i> Gestión de Secciones</h2>
         <a href="{{ route('cursos.create') }}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Nuevo Curso
+            <i class="bi bi-plus-circle"></i> Nueva Seccion
         </a>
     </div>
 
@@ -33,12 +33,12 @@
                     <label for="search" class="form-label">Buscar</label>
                     <input type="text" class="form-control" id="search" name="search" 
                            value="{{ request('search') }}" 
-                           placeholder="Nombre del curso o sala">
+                           placeholder="Nombre de la sección, año académico, sala...">
                 </div>
                 <div class="col-md-3">
                     <label for="nivel" class="form-label">Nivel</label>
                     <select class="form-select" id="nivel" name="nivel">
-                        <option value="">Todos</option>
+                        <option value="">Todas</option>
                         <option value="Básica" {{ request('nivel') == 'Básica' ? 'selected' : '' }}>Básica</option>
                         <option value="Media" {{ request('nivel') == 'Media' ? 'selected' : '' }}>Media</option>
                     </select>
@@ -46,7 +46,7 @@
                 <div class="col-md-2">
                     <label for="estado" class="form-label">Estado</label>
                     <select class="form-select" id="estado" name="estado">
-                        <option value="">Todos</option>
+                        <option value="">Todas</option>
                         <option value="Activo" {{ request('estado') == 'Activo' ? 'selected' : '' }}>Activo</option>
                         <option value="Inactivo" {{ request('estado') == 'Inactivo' ? 'selected' : '' }}>Inactivo</option>
                     </select>
@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <!-- Tabla de Cursos -->
+    <!-- Tabla de Secciones -->
     <div class="card">
         <div class="card-body">
             @if($cursos->count() > 0)
@@ -142,9 +142,9 @@
             @else
                 <div class="text-center py-5">
                     <i class="bi bi-inbox" style="font-size: 4rem; color: var(--gris-oscuro); opacity: 0.3;"></i>
-                    <p class="mt-3 text-muted">No se encontraron cursos.</p>
+                    <p class="mt-3 text-muted">No se encontraron secciones.</p>
                     <a href="{{ route('cursos.create') }}" class="btn btn-primary">
-                        <i class="bi bi-plus-circle"></i> Crear Primer Curso
+                        <i class="bi bi-plus-circle"></i> Crear Primera Sección
                     </a>
                 </div>
             @endif

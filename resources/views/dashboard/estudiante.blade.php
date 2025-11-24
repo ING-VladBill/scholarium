@@ -2,7 +2,20 @@
 @section('title', 'Dashboard Estudiante')
 @section('content')
 <div class="container py-4">
-    <h2 class="title-dorado">Bienvenido, {{ auth()->user()->name }}</h2>
+    @php
+        // Obtener estudiante asociado
+        $est = \App\Models\Estudiante::where('user_id', auth()->id())->first();
+
+        // Determinar el saludo
+        $saludo = match($est->genero ?? 'Masculino') {
+            'Femenino' => 'Bienvenida',
+            'Masculino' => 'Bienvenido',
+            default => 'Bienvenid@', // Para "Otro"
+        };
+    @endphp
+
+    <h2 class="title-dorado">{{ $saludo }}, {{ auth()->user()->name }}</h2>
+
     
     {{-- Notificaciones de aprobación/rechazo --}}
     @php
@@ -42,7 +55,7 @@
                 <div class="card-body">
                     <form action="{{ route('matriculas.solicitar') }}" method="post">
                         @csrf
-                        <label>Selecciona un Curso:</label>
+                        <label>Selecciona una Sección:</label>
                         <select name="curso_id" class="form-select mb-3" required>
                             @foreach(\App\Models\Curso::where('estado', 'Activo')->get() as $curso)
                                 <option value="{{ $curso->id }}" {{ $curso->estaLleno() ? 'disabled' : '' }}>
