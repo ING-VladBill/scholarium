@@ -78,7 +78,7 @@ class DocenteController extends Controller
             'name' => $validated['nombres'] . ' ' . $validated['apellidos'],
             'email' => $validated['email'],
             'password' => Hash::make($passwordTemporal),
-            'role' => 'docente',
+            'role' => 'profesor',
             'docente_id' => $docente->id,
         ]);
 

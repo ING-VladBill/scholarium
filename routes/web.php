@@ -11,6 +11,8 @@ use App\Http\Controllers\AsignaturaController;
 use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\ContactoController;
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Rutas Públicas
@@ -45,6 +47,19 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 // Registro de Administrador (solo para admins autenticados)
 Route::get('/admin/register', [AuthController::class, 'showRegisterAdmin'])->name('admin.register')->middleware('auth');
 Route::post('/admin/register', [AuthController::class, 'registerAdmin'])->name('admin.register.post')->middleware('auth');
+
+// Ruta para guardar múltiples asignaciones
+Route::post('/asignaciones/store-multiple', [AsignacionController::class, 'storeMultiple'])->name('asignaciones.store-multiple');
+
+// Ruta para obtener horario del docente
+Route::get('/asignaciones/horario-docente/{docente}', [AsignacionController::class, 'getHorarioDocente']);
+
+// Ruta para verificar disponibilidad de horario
+Route::post('/asignaciones/verificar-disponibilidad', [AsignacionController::class, 'verificarDisponibilidad']);
+
+// Ruta para obtener días disponibles
+Route::post('/asignaciones/dias-disponibles', [AsignacionController::class, 'getDiasDisponibles']);
+
 
 /*
 |--------------------------------------------------------------------------

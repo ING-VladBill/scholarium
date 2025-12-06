@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('docente_id')->nullable()->after('role');
-            $table->foreign('docente_id')->references('id')->on('docentes')->onDelete('cascade');
-        });
+        // Verificar si la columna no existe antes de agregarla
+        if (!Schema::hasColumn('users', 'docente_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->unsignedBigInteger('docente_id')->nullable()->after('role');
+                $table->foreign('docente_id')->references('id')->on('docentes')->onDelete('cascade');
+            });
+        }
     }
 
     /**
@@ -22,9 +25,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['docente_id']);
-            $table->dropColumn('docente_id');
-        });
+        if (Schema::hasColumn('users', 'docente_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropForeign(['docente_id']);
+                $table->dropColumn('docente_id');
+            });
+        }
     }
 };

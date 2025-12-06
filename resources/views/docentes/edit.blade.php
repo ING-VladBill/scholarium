@@ -64,25 +64,24 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="especialidad" class="form-label">Especialidad <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('especialidad') is-invalid @enderror" 
-                                       id="especialidad" name="especialidad" value="{{ old('especialidad', $docente->especialidad) }}" required>
-                                @error('especialidad')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label for="fecha_contratacion" class="form-label">Fecha de Contratación <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control @error('fecha_contratacion') is-invalid @enderror" 
-                                       id="fecha_contratacion" name="fecha_contratacion" 
-                                       value="{{ old('fecha_contratacion', $docente->fecha_contratacion->format('Y-m-d')) }}" required>
-                                @error('fecha_contratacion')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="especialidad" class="form-label">Especialidad <span class="text-danger">*</span></label>
+                            <select class="form-select @error('especialidad') is-invalid @enderror" 
+                                    id="especialidad" name="especialidad" required>
+                                <option value="">Seleccione una especialidad</option>
+                                <option value="Matemáticas" {{ old('especialidad', $docente->especialidad) == 'Matemáticas' ? 'selected' : '' }}>Matemáticas</option>
+                                <option value="Comunicación" {{ old('especialidad', $docente->especialidad) == 'Comunicación' ? 'selected' : '' }}>Comunicación</option>
+                                <option value="Ciencias Naturales" {{ old('especialidad', $docente->especialidad) == 'Ciencias Naturales' ? 'selected' : '' }}>Ciencias Naturales</option>
+                                <option value="Ciencias Sociales" {{ old('especialidad', $docente->especialidad) == 'Ciencias Sociales' ? 'selected' : '' }}>Ciencias Sociales</option>
+                                <option value="Inglés" {{ old('especialidad', $docente->especialidad) == 'Inglés' ? 'selected' : '' }}>Inglés</option>
+                                <option value="Educación Física" {{ old('especialidad', $docente->especialidad) == 'Educación Física' ? 'selected' : '' }}>Educación Física</option>
+                                <option value="Arte y Cultura" {{ old('especialidad', $docente->especialidad) == 'Arte y Cultura' ? 'selected' : '' }}>Arte y Cultura</option>
+                                <option value="Educación Religiosa" {{ old('especialidad', $docente->especialidad) == 'Educación Religiosa' ? 'selected' : '' }}>Educación Religiosa</option>
+                                <option value="Tutoría" {{ old('especialidad', $docente->especialidad) == 'Tutoría' ? 'selected' : '' }}>Tutoría</option>
+                            </select>
+                            @error('especialidad')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">

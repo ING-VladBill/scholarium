@@ -8,6 +8,7 @@ use App\Models\Asignatura;
 use App\Models\Docente;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AsignacionController extends Controller
 {
@@ -47,6 +48,174 @@ class AsignacionController extends Controller
         
         $docentes = Docente::where('estado', 'Activo')->orderBy('apellidos')->get();
         return view('asignaciones.seleccionar-docente', compact('curso', 'asignatura', 'docentes', 'horasAsignadas', 'horasRestantes'));
+    }
+
+    /**
+     * Guardar múltiples asignaciones de una vez
+     */
+    public function storeMultiple(Request $request)
+    {
+        $validated = $request->validate([
+            'curso_id' => 'required|exists:cursos,id',
+            'asignatura_id' => 'required|exists:asignaturas,id',
+            'docente_id' => 'required|exists:docentes,id',
+            'asignaciones' => 'required|array|min:1',
+            'asignaciones.*.dia_semana' => 'required|string',
+            'asignaciones.*.hora_inicio' => 'required',
+            'asignaciones.*.hora_fin' => 'required',
+        ]);
+
+        $asignatura = Asignatura::findOrFail($validated['asignatura_id']);
+        $curso = Curso::findOrFail($validated['curso_id']);
+        $docente = Docente::findOrFail($validated['docente_id']);
+
+        // Verificar que se asignen EXACTAMENTE las horas semanales requeridas
+        $horasAsignadas = Asignacion::where('curso_id', $validated['curso_id'])
+                                   ->where('asignatura_id', $validated['asignatura_id'])
+                                   ->where('estado', 'Activo')
+                                   ->count();
+        
+        $horasAAsignar = count($validated['asignaciones']);
+        $horasRequeridas = $asignatura->horas_semanales - $horasAsignadas;
+        
+        if ($horasAAsignar !== $horasRequeridas) {
+            if ($horasAAsignar < $horasRequeridas) {
+                return back()->withInput()->with('error', 'Debes asignar exactamente ' . $horasRequeridas . ' hora(s). Faltan ' . ($horasRequeridas - $horasAAsignar) . ' hora(s).');
+            } else {
+                return back()->withInput()->with('error', 'Debes asignar exactamente ' . $horasRequeridas . ' hora(s). Sobran ' . ($horasAAsignar - $horasRequeridas) . ' hora(s).');
+            }
+        }
+
+        DB::beginTransaction();
+        
+        try {
+            $errores = [];
+            $asignacionesCreadas = 0;
+
+            foreach ($validated['asignaciones'] as $index => $asignacionData) {
+                // Validar que hora_fin sea mayor que hora_inicio
+                if ($asignacionData['hora_fin'] <= $asignacionData['hora_inicio']) {
+                    $errores[] = "Fila " . ($index + 1) . ": La hora de fin debe ser posterior a la hora de inicio.";
+                    continue;
+                }
+
+                // Validar conflicto de horario del docente
+                $conflictoDocente = $this->verificarConflictoHorario(
+                    $validated['docente_id'],
+                    $asignacionData['dia_semana'],
+                    $asignacionData['hora_inicio'],
+                    $asignacionData['hora_fin'],
+                    'docente'
+                );
+
+                if ($conflictoDocente) {
+                    $errores[] = "Fila " . ($index + 1) . ": El docente ya tiene clase: " . $conflictoDocente;
+                    continue;
+                }
+
+                // Validar conflicto de horario del curso
+                $conflictoCurso = $this->verificarConflictoHorario(
+                    $validated['curso_id'],
+                    $asignacionData['dia_semana'],
+                    $asignacionData['hora_inicio'],
+                    $asignacionData['hora_fin'],
+                    'curso'
+                );
+
+                if ($conflictoCurso) {
+                    $errores[] = "Fila " . ($index + 1) . ": El curso ya tiene clase: " . $conflictoCurso;
+                    continue;
+                }
+
+                // Crear la asignación
+                Asignacion::create([
+                    'curso_id' => $validated['curso_id'],
+                    'asignatura_id' => $validated['asignatura_id'],
+                    'docente_id' => $validated['docente_id'],
+                    'dia_semana' => $asignacionData['dia_semana'],
+                    'hora_inicio' => $asignacionData['hora_inicio'],
+                    'hora_fin' => $asignacionData['hora_fin'],
+                    'estado' => 'Activo'
+                ]);
+
+                $asignacionesCreadas++;
+            }
+
+            if (!empty($errores)) {
+                DB::rollBack();
+                return back()->withInput()->with('error', 'Se encontraron errores:<br>' . implode('<br>', $errores));
+            }
+
+            DB::commit();
+
+            $mensaje = $asignacionesCreadas . ' asignación(es) creada(s) exitosamente para ' . $asignatura->nombre . ' en ' . $curso->nombre . '.';
+            
+            return redirect()->route('asignaciones.listar')->with('success', $mensaje);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->with('error', 'Error al crear las asignaciones: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Obtener horario actual del docente
+     */
+    public function getHorarioDocente($docenteId)
+    {
+        $asignaciones = Asignacion::where('docente_id', $docenteId)
+                                  ->where('estado', 'Activo')
+                                  ->with(['curso', 'asignatura'])
+                                  ->orderBy('dia_semana')
+                                  ->orderBy('hora_inicio')
+                                  ->get();
+
+        $horario = [];
+        foreach ($asignaciones as $asignacion) {
+            $horario[] = [
+                'dia' => $asignacion->dia_semana,
+                'hora_inicio' => $asignacion->hora_inicio,
+                'hora_fin' => $asignacion->hora_fin,
+                'asignatura' => $asignacion->asignatura->nombre,
+                'curso' => $asignacion->curso->nombre
+            ];
+        }
+
+        return response()->json($horario);
+    }
+
+    /**
+     * Verificar disponibilidad de un horario específico
+     */
+    public function verificarDisponibilidad(Request $request)
+    {
+        $docenteId = $request->input('docente_id');
+        $cursoId = $request->input('curso_id');
+        $dia = $request->input('dia_semana');
+        $horaInicio = $request->input('hora_inicio');
+        $horaFin = $request->input('hora_fin');
+
+        $conflictoDocente = $this->verificarConflictoHorario($docenteId, $dia, $horaInicio, $horaFin, 'docente');
+        $conflictoCurso = $this->verificarConflictoHorario($cursoId, $dia, $horaInicio, $horaFin, 'curso');
+
+        if ($conflictoDocente) {
+            return response()->json([
+                'disponible' => false,
+                'mensaje' => 'El docente ya tiene clase: ' . $conflictoDocente
+            ]);
+        }
+
+        if ($conflictoCurso) {
+            return response()->json([
+                'disponible' => false,
+                'mensaje' => 'El curso ya tiene clase: ' . $conflictoCurso
+            ]);
+        }
+
+        return response()->json([
+            'disponible' => true,
+            'mensaje' => 'Horario disponible'
+        ]);
     }
 
     public function store(Request $request)
