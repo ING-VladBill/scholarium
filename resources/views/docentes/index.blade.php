@@ -9,6 +9,9 @@
             <h2 class="text-primary"><i class="bi bi-person-badge me-2"></i>Gestión de Docentes</h2>
         </div>
         <div class="col-md-6 text-end">
+            <a href="{{ route('dashboard') }}" class="btn btn-secondary me-2">
+                <i class="bi bi-house me-2"></i>Dashboard
+            </a>
             <a href="{{ route('docentes.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle me-2"></i>Nuevo Docente
             </a>
@@ -18,6 +21,18 @@
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if(session('password_temporal'))
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <h5 class="alert-heading"><i class="bi bi-key me-2"></i>Usuario Creado</h5>
+            <p class="mb-0"><strong>Docente:</strong> {{ session('docente_nombre') }}</p>
+            <p class="mb-0"><strong>Email:</strong> {{ session('docente_email') ?? 'Ver en la tabla' }}</p>
+            <p class="mb-0"><strong>Contraseña Temporal:</strong> <code class="text-dark">{{ session('password_temporal') }}</code></p>
+            <hr>
+            <small>Por favor, anote esta contraseña y entréguela al docente. No se volverá a mostrar.</small>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
@@ -46,7 +61,7 @@
             </form>
 
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover" style="min-width: 900px;">
                     <thead class="table-light">
                         <tr>
                             <th>DNI</th>

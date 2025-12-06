@@ -9,6 +9,9 @@
             <h2 class="text-primary"><i class="bi bi-book me-2"></i>Gestión de Asignaturas</h2>
         </div>
         <div class="col-md-6 text-end">
+            <a href="{{ route('dashboard') }}" class="btn btn-secondary me-2">
+                <i class="bi bi-house me-2"></i>Dashboard
+            </a>
             <a href="{{ route('asignaturas.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle me-2"></i>Nueva Asignatura
             </a>
@@ -53,7 +56,7 @@
             </form>
 
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover" style="min-width: 900px;">
                     <thead class="table-light">
                         <tr>
                             <th>Código</th>

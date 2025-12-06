@@ -65,7 +65,7 @@
         <div class="card-body">
             @if($cursos->count() > 0)
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover" style="min-width: 900px;">
                         <thead>
                             <tr>
                                 <th>Nombre</th>

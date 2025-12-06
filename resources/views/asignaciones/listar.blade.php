@@ -19,7 +19,7 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <table class="table table-hover">
+            <table class="table table-hover" style="min-width: 900px;">
                 <thead class="table-light">
                     <tr>
                         <th>Curso</th>

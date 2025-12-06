@@ -66,37 +66,39 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="especialidad" class="form-label">Especialidad <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('especialidad') is-invalid @enderror" 
-                                       id="especialidad" name="especialidad" value="{{ old('especialidad') }}" 
-                                       placeholder="Matemáticas, Lenguaje, etc." required>
+                                <label for="especialidad" class="form-label">Especialidad / Área <span class="text-danger">*</span></label>
+                                <select class="form-select @error('especialidad') is-invalid @enderror" 
+                                        id="especialidad" name="especialidad" required>
+                                    <option value="">Seleccione una especialidad...</option>
+                                    @foreach($especialidades as $esp)
+                                        <option value="{{ $esp }}" {{ old('especialidad') == $esp ? 'selected' : '' }}>
+                                            {{ $esp }}
+                                        </option>
+                                    @endforeach
+                                </select>
                                 @error('especialidad')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="fecha_contratacion" class="form-label">Fecha de Contratación <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control @error('fecha_contratacion') is-invalid @enderror" 
-                                       id="fecha_contratacion" name="fecha_contratacion" 
-                                       value="{{ old('fecha_contratacion') }}" required>
-                                @error('fecha_contratacion')
+                                <label for="estado" class="form-label">Estado <span class="text-danger">*</span></label>
+                                <select class="form-select @error('estado') is-invalid @enderror" 
+                                        id="estado" name="estado" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="Activo" {{ old('estado') == 'Activo' ? 'selected' : '' }}>Activo</option>
+                                    <option value="Inactivo" {{ old('estado') == 'Inactivo' ? 'selected' : '' }}>Inactivo</option>
+                                </select>
+                                @error('estado')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="estado" class="form-label">Estado <span class="text-danger">*</span></label>
-                            <select class="form-select @error('estado') is-invalid @enderror" 
-                                    id="estado" name="estado" required>
-                                <option value="">Seleccione...</option>
-                                <option value="Activo" {{ old('estado') == 'Activo' ? 'selected' : '' }}>Activo</option>
-                                <option value="Inactivo" {{ old('estado') == 'Inactivo' ? 'selected' : '' }}>Inactivo</option>
-                            </select>
-                            @error('estado')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Nota:</strong> Al guardar el docente, se creará automáticamente un usuario para acceder al sistema. 
+                            La contraseña temporal se mostrará después de crear el registro.
                         </div>
 
                         <div class="d-flex justify-content-between mt-4">
